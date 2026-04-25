@@ -1,187 +1,55 @@
-# Playto Community Feed
+# Swetha Ramamoorthi KYC Dashboard - Playto Challenge
 
-A Reddit-style community platform with threaded discussions and a dynamic leaderboard. Built for the Playto Engineering Challenge.
+A modern, responsive KYC onboarding dashboard for merchants and reviewers.
 
-## Quick Start
+## 🚀 Live Demo
+[Vercel Deployment Link - To be updated after push]
 
-### Backend Setup
+## 🛠 Features
+- **Merchant Side**: Multi-step KYC form with draft saving and document upload validation.
+- **Reviewer Side**: Queue management with SLA tracking, metrics dashboard, and decision engine.
+- **State Machine**: Robust transition logic to prevent illegal state changes.
+- **Authentication**: Role-based access control with data ownership isolation.
 
-```bash
-cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py populate_data  # Creates test users and sample posts
-python manage.py runserver
-```
+## ⚙️ Setup Instructions
 
-Backend runs at `http://127.0.0.1:8000/`
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
 
-### Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend runs at `http://localhost:5173/`
-
-## Test It Out
-
-Login with any of these users:
-- Username: `user1`, `user2`, `user3`, `user4`, or `user5`
-- Password: `password123` (same for all)
-
-The sample data includes posts, comments, and likes so you'll see an active feed right away.
-
-## What's Inside
-
-### Features
-
-- **Threaded Comments** - Nest replies up to 5 levels deep (like Reddit)
-- **Like System** - Like posts and comments, earn karma
-- **24-Hour Leaderboard** - Top 5 contributors by recent karma
-- **Real-time Updates** - Leaderboard refreshes every 30 seconds
-- **Responsive UI** - Works on desktop and mobile
-
-### Tech Stack
-
-**Backend:**
-- Django 5.x + Django REST Framework
-- SQLite (easy to swap for PostgreSQL in production)
-- Token authentication
-
-**Frontend:**
-- React 19 + Vite
-- Tailwind CSS for styling
-- Axios for API calls
-
-## API Endpoints
-
-### Posts
-
-```
-GET    /api/posts/              # List all posts
-GET    /api/posts/{id}/         # Get post with full comment tree
-POST   /api/posts/              # Create new post
-POST   /api/posts/{id}/like/    # Toggle like on post
-```
-
-### Comments
-
-```
-POST   /api/comments/           # Create comment or reply
-POST   /api/comments/{id}/like/ # Toggle like on comment
-```
-
-### Leaderboard
-
-```
-GET    /api/leaderboard/        # Top 5 users by 24h karma
-```
-
-## Project Structure
-
-```
-playto-challenge/
-├── backend/
-│   ├── community_feed/          # Django project settings
-│   ├── feed/                    # Main app
-│   │   ├── models.py           # User, Post, Comment, Like, KarmaTransaction
-│   │   ├── views.py            # API views with optimizations
-│   │   ├── serializers.py      # DRF serializers
-│   │   └── management/
-│   │       └── commands/
-│   │           └── populate_data.py  # Sample data generator
-│   └── db.sqlite3
-├── frontend/
-│   └── src/
-│       ├── components/
-│       │   ├── Feed.jsx        # Post feed
-│       │   ├── CommentThread.jsx  # Recursive comments
-│       │   └── Leaderboard.jsx    # Top contributors
-│       ├── api.js              # API client
-│       └── App.jsx             # Main app
-└── README.md
-```
-
-## Key Technical Bits
-
-### N+1 Query Prevention
-
-The comment tree uses recursive prefetching to load all nested comments in ~3-5 queries instead of 50+. Check `views.py` for the implementation.
-
-### Concurrency Handling
-
-Likes use `select_for_update()` and `F()` expressions to prevent race conditions when multiple people like the same thing at once.
-
-### Dynamic Leaderboard
-
-Instead of caching karma counts, we log all karma events with timestamps. The leaderboard query filters the last 24 hours on-the-fly, so it's always accurate.
-
-## Development
-
-### Django Admin
-
-Access at `http://127.0.0.1:8000/admin/`
-- Username: `admin`
-- Password: `admin123`
-
-(Created by the `populate_data` command)
-
-### Debug Toolbar
-
-The Django Debug Toolbar is enabled in development. Visit any API endpoint in your browser to see query counts and performance metrics.
-
-### Adding More Test Data
-
-```bash
-python manage.py populate_data
-```
-
-This creates 5 users, several posts, nested comments, and distributes likes across different time periods to test the leaderboard.
-
-## Deployment
-
-### Backend (Railway/Heroku)
-
-1. Set environment variables:
-   ```
-   DJANGO_SECRET_KEY=your-secret-key
-   ALLOWED_HOSTS=your-domain.com
-   CORS_ALLOWED_ORIGINS=https://your-frontend.com
-   ```
-
-2. Update `settings.py` to use PostgreSQL in production
-
-3. Run migrations:
+### Installation
+1. Clone the repository:
    ```bash
-   python manage.py migrate
-   python manage.py createsuperuser
+   git clone https://github.com/SwethaRamamorthi/Playto-challenge.git
+   cd Playto-challenge
    ```
-
-### Frontend (Vercel/Netlify)
-
-1. Set environment variable:
-   ```
-   VITE_API_URL=https://your-backend.com
-   ```
-
-2. Build:
+2. Install dependencies:
    ```bash
-   npm run build
+   npm install
    ```
 
-3. Deploy the `dist/` folder
+### Running Locally
+- Start the development server:
+  ```bash
+  npm run dev
+  ```
+- The app will be available at `http://localhost:5173`.
 
-## Technical Documentation
+### Running Tests
+- Execute the state machine tests:
+  ```bash
+  npm test
+  ```
 
-For a deeper dive into the technical decisions and implementation details, check out [EXPLAINER.md](EXPLAINER.md).
+## 📂 Project Structure
+- `src/components`: Reusable UI elements (Navbar, Sidebar, FileUpload, etc.)
+- `src/pages`: Main application screens.
+- `src/context`: Global state management.
+- `src/services`: Mock API layer with seed data and business logic.
+- `EXPLAINER.md`: Technical deep-dive into state management and security.
 
-## Notes
-
-- The frontend uses a simple mock login for demo purposes. In production, you'd want proper authentication with the DRF token system.
-- SQLite is fine for development, but you'll want PostgreSQL for production.
-- The leaderboard query could be cached with a 1-minute TTL in a high-traffic scenario.
-
-Built with ❤️ for the Playto Engineering Challenge
+## 🧪 Seed Data
+Upon first login:
+- **Merchant A** will see a **Draft** application.
+- **Merchant B** will see an **Under Review** application.
+- **Reviewer** will see all submissions in the queue with SLA risks highlighted.

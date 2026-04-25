@@ -1,0 +1,25 @@
+import React from 'react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export const StatusBadge = ({ status, className }) => {
+   const getStatusStyles = () => {
+      switch (status) {
+         case 'draft': return 'bg-slate-100 text-slate-700 border-slate-200';
+         case 'submitted': return 'bg-blue-50 text-blue-700 border-blue-200';
+         case 'under_review': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
+         case 'approved': return 'bg-green-50 text-green-700 border-green-200';
+         case 'rejected': return 'bg-red-50 text-red-700 border-red-200';
+         case 'more_info_requested': return 'bg-orange-50 text-orange-700 border-orange-200';
+         default: return 'bg-slate-100 text-slate-700 border-slate-200';
+      }
+   };
+
+   const formatStatus = (s) => s.replace(/_/g, ' ').toUpperCase();
+
+   return (
+      <span className={twMerge(clsx("inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border", getStatusStyles(), className))}>
+         {formatStatus(status)}
+      </span>
+   );
+};
